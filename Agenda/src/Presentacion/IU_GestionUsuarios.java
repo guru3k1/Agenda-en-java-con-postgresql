@@ -9,8 +9,17 @@ import Control.BLLUsuario;
 import java.util.regex.Pattern;
 import Control.ConvertirMayusculas;
 import Control.Validar;
+import Datos.Usuario;
+import java.awt.Image;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.regex.Matcher;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,7 +31,11 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     Validar v = new Validar();
     DefaultTableModel modelo_tabla;
     BLLUsuario bll = new BLLUsuario();
-
+    FileInputStream fis;
+    int longitudBytes, apretafoto=0;
+    boolean consultar = false;
+    Usuario u = new Usuario();
+    
     public IU_GestionUsuarios() {
         initComponents();
         metodosdeInicio();
@@ -96,6 +109,66 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
 
     }
 
+    public void cargarFoto(){
+        
+        JFileChooser j = new JFileChooser();
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("JPG & PNG"
+                ,"jpg","png");
+        j.setFileFilter(filtro);
+        int estado = j.showOpenDialog(null);
+        if (estado == JFileChooser.APPROVE_OPTION) {
+            
+            try {
+                fis = new FileInputStream (j.getSelectedFile());
+                this.longitudBytes= (int) j.getSelectedFile().length();
+                
+                try {
+                    lblfoto.setIcon(null);
+                    Image icono = ImageIO.read(j.getSelectedFile())
+                            .getScaledInstance(lblfoto.getWidth()
+                                    , lblfoto.getHeight(), Image.SCALE_DEFAULT);
+                    lblfoto.setIcon(new ImageIcon(icono));
+                    lblfoto.updateUI();
+                    apretafoto =1;
+                    System.out.println("Longitud de Bytes:" + longitudBytes);
+                    
+                } catch (IOException e) {
+                    System.out.println("Error al cargar foto IO:" +e);
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("error al cargar file:" +e);
+            }
+            
+        }
+        
+    }
+    
+    public void botonGuardar(){
+    
+            String dni = txtdni.getText().trim();
+            String nombre = txtnombre.getText().trim();
+            String apellido = txtapellido.getText().trim();
+            String correo = txtcorreo.getText().trim();
+            String telefono = txttelefono.getText().trim();
+            String usuario = txtusuario.getText().trim();
+            String contra = txtpassword.getText();
+            Date fecha = jdatefecha.getDate();
+            u.setDni(dni);
+            u.setNombre(nombre);
+            u.setApellido(apellido);
+            u.setCorreo(correo);
+            u.setTelefono(telefono);
+            u.setUsuario(usuario);
+            u.setClave(contra);
+            u.setFecha(fecha);
+            u.setFis(fis);
+            u.setLongitudBytes(longitudBytes);
+            
+            if (consultar == false) {
+            
+        }
+            
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -313,7 +386,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_txtbuscarActionPerformed
 
     private void btnfotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnfotoActionPerformed
-        // TODO add your handling code here:
+        cargarFoto();
     }//GEN-LAST:event_btnfotoActionPerformed
 
     private void txtpasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtpasswordActionPerformed
