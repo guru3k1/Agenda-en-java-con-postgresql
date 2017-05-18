@@ -5,11 +5,13 @@
  */
 package Presentacion;
 
+import Control.BLLUsuario;
 import java.util.regex.Pattern;
 import Control.ConvertirMayusculas;
 import Control.Validar;
 import java.util.Date;
 import java.util.regex.Matcher;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,9 +20,32 @@ import java.util.regex.Matcher;
 public class IU_GestionUsuarios extends javax.swing.JFrame {
 
     Validar v = new Validar();
+    DefaultTableModel modelo_tabla;
+    BLLUsuario bll = new BLLUsuario();
 
     public IU_GestionUsuarios() {
         initComponents();
+        metodosdeInicio();
+        modelo_tabla = new DefaultTableModel(){
+            public boolean isCellEditable (int fila, int columna){
+                return false;
+            }  
+        };
+        tbldatos.setModel(modelo_tabla);
+        modelo_tabla.addColumn("id");
+        modelo_tabla.addColumn("DNI");
+        modelo_tabla.addColumn("Nombre");
+        modelo_tabla.addColumn("Apellido");
+        modelo_tabla.addColumn("Correo");
+        bll.mostrarLista(modelo_tabla, tbldatos);
+        tbldatos.getTableHeader().setReorderingAllowed(false);
+        tbldatos.getColumnModel().getColumn(0).setMaxWidth(0);
+        tbldatos.getColumnModel().getColumn(0).setMinWidth(0);
+        tbldatos.getColumnModel().getColumn(0).setPreferredWidth(0);
+        tbldatos.getColumnModel().getColumn(1).setMaxWidth(100);
+    }
+    
+    public final void metodosdeInicio(){
         v.validarSoloNumeros(txtdni);
         v.validarSoloLetras(txtnombre);
         v.validarSoloLetras(txtapellido);
@@ -35,8 +60,6 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         txtapellido.setDocument(new ConvertirMayusculas());
         txtbuscar.setDocument(new ConvertirMayusculas());
         txtusuario.setDocument(new ConvertirMayusculas());
-        
-        
     }
 
     public boolean validarFormatoCorreo(String correo) {

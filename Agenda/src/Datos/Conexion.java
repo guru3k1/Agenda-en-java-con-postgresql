@@ -31,8 +31,8 @@ public class Conexion implements Serializable{
         
     try{
         Class.forName("org.postgresql.Driver");
-        c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Cuentas", "root", "root");
-        
+        c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Agendasql", "postgres", "root");
+        System.out.println("Conectado correctamente!");
     }catch(SQLException e){
         System.out.println("error: "+e);
     }catch(ClassNotFoundException ex){
