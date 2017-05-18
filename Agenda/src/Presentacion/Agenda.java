@@ -9,7 +9,7 @@ package Presentacion;
  *
  * @author TheGuru
  */
-public class Agenda_con_mysql {
+public class Agenda{
 
     /**
      * @param args the command line arguments
