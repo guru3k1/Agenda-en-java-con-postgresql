@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 public class Conexion implements Serializable{
     
-    private Connection con=null;
+    Connection con=null;
     
     public Conexion() throws ClassNotFoundException{
         con= Conexion.realizaConexion();

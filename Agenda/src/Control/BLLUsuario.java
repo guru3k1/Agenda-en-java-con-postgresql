@@ -6,6 +6,7 @@
 package Control;
 
 import Datos.DALUsuario;
+import Datos.Usuario;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,4 +22,8 @@ public class BLLUsuario {
         
         dal.mostrarLista(model, tabla);
     }
+    
+public void insertarDatos(Usuario u){
+    dal.insertarDatos(u);
+}
 }

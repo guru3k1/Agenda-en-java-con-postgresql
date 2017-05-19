@@ -165,9 +165,41 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
             u.setLongitudBytes(longitudBytes);
             
             if (consultar == false) {
-            
+                //insertar
+                bll.insertarDatos(u);
+                limpiarTodo();
+                
+            }else if(consultar == true){
+                //modificar
+                limpiarTodo();
+                
+            }   
         }
             
+    public void actualizarTabla(){
+        //Limpiar la tabla
+        while(modelo_tabla.getRowCount()>0){
+            modelo_tabla.removeRow(0);
+        }
+        //Cargar la tabla
+        bll.mostrarLista(modelo_tabla, tbldatos);
+        
+    }
+    
+    public void limpiarTodo(){
+        txtdni.setText(null);
+        txtnombre.setText(null);
+        txtapellido.setText(null);
+        txtcorreo.setText(null);
+        txttelefono.setText(null);
+        txtusuario.setText(null);
+        txtpassword.setText(null);
+        jdatefecha.setDate(null);
+        btnguardar.setEnabled(false);
+        btneliminar.setEnabled(false);
+        consultar = false;
+        apretafoto =0;
+        lblfoto.setIcon(null);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -243,7 +275,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblfoto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
-        jPanel2.add(lblfoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 25, 220, 280));
+        jPanel2.add(lblfoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(31, 45, 220, 260));
 
         btnfoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Usuario.png"))); // NOI18N
         btnfoto.setText("Subir Foto");
@@ -394,7 +426,8 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_txtpasswordActionPerformed
 
     private void btnguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarActionPerformed
-        // TODO add your handling code here:
+     botonGuardar();
+     actualizarTabla();
     }//GEN-LAST:event_btnguardarActionPerformed
 
     private void txtdniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdniActionPerformed
