@@ -20,8 +20,8 @@ public class Validar
             {
             char c = e.getKeyChar();
             int k = (int)e.getKeyChar();
-           if (Character.isDigit(c) || k<65 || k>122|| k==91 || k==92 || k==93 
-                   || k==94 || k==95 || k==96 ) 
+           if (Character.isDigit(c) /*|| k<65 || k>122|| k==91 || k==92 || k==93 
+                   || k==94 || k==95 || k==96 */ ) 
             {
                 e.consume();
             }

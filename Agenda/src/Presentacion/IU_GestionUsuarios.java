@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,17 +34,17 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     DefaultTableModel modelo_tabla;
     BLLUsuario bll = new BLLUsuario();
     FileInputStream fis;
-    int longitudBytes, apretafoto=0;
+    int longitudBytes, apretafoto = 0, id = 0;
     boolean consultar = false;
     Usuario u = new Usuario();
-    
+
     public IU_GestionUsuarios() {
         initComponents();
         metodosdeInicio();
-        modelo_tabla = new DefaultTableModel(){
-            public boolean isCellEditable (int fila, int columna){
+        modelo_tabla = new DefaultTableModel() {
+            public boolean isCellEditable(int fila, int columna) {
                 return false;
-            }  
+            }
         };
         tbldatos.setModel(modelo_tabla);
         modelo_tabla.addColumn("id");
@@ -57,8 +59,8 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         tbldatos.getColumnModel().getColumn(0).setPreferredWidth(0);
         tbldatos.getColumnModel().getColumn(1).setMaxWidth(100);
     }
-    
-    public final void metodosdeInicio(){
+
+    public final void metodosdeInicio() {
         v.validarSoloNumeros(txtdni);
         v.validarSoloLetras(txtnombre);
         v.validarSoloLetras(txtapellido);
@@ -109,84 +111,90 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
 
     }
 
-    public void cargarFoto(){
-        
+    public void cargarFoto() {
+
         JFileChooser j = new JFileChooser();
-        FileNameExtensionFilter filtro = new FileNameExtensionFilter("JPG & PNG"
-                ,"jpg","png");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("JPG & PNG",
+                 "jpg", "png");
         j.setFileFilter(filtro);
         int estado = j.showOpenDialog(null);
         if (estado == JFileChooser.APPROVE_OPTION) {
-            
+
             try {
-                fis = new FileInputStream (j.getSelectedFile());
-                this.longitudBytes= (int) j.getSelectedFile().length();
-                
+                fis = new FileInputStream(j.getSelectedFile());
+                this.longitudBytes = (int) j.getSelectedFile().length();
+
                 try {
                     lblfoto.setIcon(null);
                     Image icono = ImageIO.read(j.getSelectedFile())
-                            .getScaledInstance(lblfoto.getWidth()
-                                    , lblfoto.getHeight(), Image.SCALE_DEFAULT);
+                            .getScaledInstance(lblfoto.getWidth(),
+                                     lblfoto.getHeight(), Image.SCALE_DEFAULT);
                     lblfoto.setIcon(new ImageIcon(icono));
                     lblfoto.updateUI();
-                    apretafoto =1;
+                    apretafoto = 1;
                     System.out.println("Longitud de Bytes:" + longitudBytes);
-                    
+
                 } catch (IOException e) {
-                    System.out.println("Error al cargar foto IO:" +e);
+                    System.out.println("Error al cargar foto IO:" + e);
                 }
             } catch (FileNotFoundException e) {
-                System.out.println("error al cargar file:" +e);
+                System.out.println("error al cargar file:" + e);
             }
-            
+
         }
-        
+
     }
-    
-    public void botonGuardar(){
-    
-            String dni = txtdni.getText().trim();
-            String nombre = txtnombre.getText().trim();
-            String apellido = txtapellido.getText().trim();
-            String correo = txtcorreo.getText().trim();
-            String telefono = txttelefono.getText().trim();
-            String usuario = txtusuario.getText().trim();
-            String contra = txtpassword.getText();
-            Date fecha = jdatefecha.getDate();
-            u.setDni(dni);
-            u.setNombre(nombre);
-            u.setApellido(apellido);
-            u.setCorreo(correo);
-            u.setTelefono(telefono);
-            u.setUsuario(usuario);
-            u.setClave(contra);
-            u.setFecha(fecha);
-            u.setFis(fis);
-            u.setLongitudBytes(longitudBytes);
-            
-            if (consultar == false) {
-                //insertar
-                bll.insertarDatos(u);
-                limpiarTodo();
-                
-            }else if(consultar == true){
-                //modificar
-                limpiarTodo();
-                
-            }   
+
+    public void botonGuardar() {
+
+        String dni = txtdni.getText().trim();
+        String nombre = txtnombre.getText().trim();
+        String apellido = txtapellido.getText().trim();
+        String correo = txtcorreo.getText().trim();
+        String telefono = txttelefono.getText().trim();
+        String usuario = txtusuario.getText().trim();
+        String contra = txtpassword.getText();
+        Date fecha = jdatefecha.getDate();
+        u.setId_usuario(id);
+        u.setDni(dni);
+        u.setNombre(nombre);
+        u.setApellido(apellido);
+        u.setCorreo(correo);
+        u.setTelefono(telefono);
+        u.setUsuario(usuario);
+        u.setClave(contra);
+        u.setFecha(fecha);
+        u.setFis(fis);
+        u.setLongitudBytes(longitudBytes);
+
+        if (consultar == false) {
+            //insertar
+            bll.insertarDatos(u);
+            limpiarTodo();
+
+        } else if (consultar == true) {
+            //modificar
+            if (apretafoto == 0) {
+                bll.modificarDatossinfoto(u);
+            } else if (apretafoto == 1) {
+                bll.modificarDatosconfoto(u);
+            }
+            limpiarTodo();
+
         }
-            
-    public void actualizarTabla(){
+    }
+
+    public void actualizarTabla() {
         //Limpiar la tabla
-        while(modelo_tabla.getRowCount()>0){
+        while (modelo_tabla.getRowCount() > 0) {
             modelo_tabla.removeRow(0);
         }
         //Cargar la tabla
         bll.mostrarLista(modelo_tabla, tbldatos);
-        
+
     }
-    
-    public void limpiarTodo(){
+
+    public void limpiarTodo() {
         txtdni.setText(null);
         txtnombre.setText(null);
         txtapellido.setText(null);
@@ -198,9 +206,25 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         btnguardar.setEnabled(false);
         btneliminar.setEnabled(false);
         consultar = false;
-        apretafoto =0;
+        apretafoto = 0;
         lblfoto.setIcon(null);
     }
+
+    public void buscar() {
+        String dato = txtbuscar.getText();
+        if (dato.isEmpty()) {
+            actualizarTabla();
+        } else if (!dato.isEmpty()) {
+
+            while (modelo_tabla.getRowCount() > 0) {
+                modelo_tabla.removeRow(0);
+            }
+            bll.buscarLista(modelo_tabla, tbldatos, dato);
+
+        }
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -210,7 +234,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        pane = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbldatos = new javax.swing.JTable();
@@ -255,10 +279,20 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbldatos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbldatosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbldatos);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 69, 750, 360));
 
+        txtbuscar.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                txtbuscarCaretUpdate(evt);
+            }
+        });
         txtbuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtbuscarActionPerformed(evt);
@@ -269,7 +303,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         lblbuscar.setText("Buscar");
         jPanel1.add(lblbuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 110, 30));
 
-        jTabbedPane1.addTab("Lista de Usuarios", jPanel1);
+        pane.addTab("Lista de Usuarios", jPanel1);
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -308,7 +342,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         });
         jPanel2.add(txtnombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 80, 320, 30));
 
-        jLabel5.setText("Nombres");
+        jLabel5.setText("Nombre");
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 80, 100, 30));
 
         txtapellido.addCaretListener(new javax.swing.event.CaretListener() {
@@ -318,7 +352,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         });
         jPanel2.add(txtapellido, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, 320, 30));
 
-        jLabel6.setText("Apellidos");
+        jLabel6.setText("Apellido");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 120, 100, 30));
 
         txtcorreo.addCaretListener(new javax.swing.event.CaretListener() {
@@ -388,26 +422,36 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
 
         btnnuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar.png"))); // NOI18N
         btnnuevo.setText("Nuevo");
+        btnnuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnnuevoActionPerformed(evt);
+            }
+        });
         jPanel2.add(btnnuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 110, 30));
 
         btneliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Eliminar.png"))); // NOI18N
         btneliminar.setText("Eliminar");
         btneliminar.setEnabled(false);
+        btneliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneliminarActionPerformed(evt);
+            }
+        });
         jPanel2.add(btneliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 110, -1));
 
-        jTabbedPane1.addTab("Usuarios", jPanel2);
+        pane.addTab("Usuarios", jPanel2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pane, javax.swing.GroupLayout.PREFERRED_SIZE, 801, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pane, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -426,8 +470,8 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_txtpasswordActionPerformed
 
     private void btnguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarActionPerformed
-     botonGuardar();
-     actualizarTabla();
+        botonGuardar();
+        actualizarTabla();
     }//GEN-LAST:event_btnguardarActionPerformed
 
     private void txtdniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtdniActionPerformed
@@ -465,6 +509,49 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     private void jdatefechaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jdatefechaPropertyChange
         validarIngreso();
     }//GEN-LAST:event_jdatefechaPropertyChange
+
+    private void txtbuscarCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_txtbuscarCaretUpdate
+        buscar();
+    }//GEN-LAST:event_txtbuscarCaretUpdate
+
+    private void tbldatosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbldatosMouseClicked
+        if (evt.getClickCount() == 2) {
+            consultar = true;
+            int fila = tbldatos.getSelectedRow();
+            id = (int) tbldatos.getValueAt(fila, 0);
+            Object[] datos = bll.consultarporID(id, lblfoto);
+            txtdni.setText(datos[0].toString());
+            txtnombre.setText(datos[1].toString());
+            txtapellido.setText(datos[2].toString());
+            txtcorreo.setText(datos[3].toString());
+            txttelefono.setText(datos[4].toString());
+            txtusuario.setText(datos[5].toString());
+            txtpassword.setText(datos[6].toString());
+            jdatefecha.setDate((Date) datos[7]);
+            try {
+                lblfoto.setIcon((Icon) datos[8]);
+            } catch (Exception e) {
+            }
+
+            pane.setSelectedIndex(1);
+            btneliminar.setEnabled(true);
+
+        }
+    }//GEN-LAST:event_tbldatosMouseClicked
+
+    private void btnnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnnuevoActionPerformed
+        limpiarTodo();
+    }//GEN-LAST:event_btnnuevoActionPerformed
+
+    private void btneliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneliminarActionPerformed
+        int respuesta= JOptionPane.showConfirmDialog(null, "Esta seguro de eliminar este Usuario?");
+            if (respuesta==0) {
+                u.setId_usuario(id);
+                bll.elimiarUsuario(u);
+                limpiarTodo();
+            
+        }
+    }//GEN-LAST:event_btneliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -517,10 +604,10 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private com.toedter.calendar.JDateChooser jdatefecha;
     private javax.swing.JLabel lblbuscar;
     private javax.swing.JLabel lblfoto;
+    private javax.swing.JTabbedPane pane;
     private javax.swing.JTable tbldatos;
     private javax.swing.JTextField txtapellido;
     private javax.swing.JTextField txtbuscar;
