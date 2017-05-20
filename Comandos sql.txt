@@ -1,0 +1,28 @@
+Segun el proyecto necesitamos una base de datos llamada Agendasql
+El usuario es "postgres" y la clave "root"
+
+
+Crea la secuencia para que enumere los registros:
+------------------------------------------------
+
+create sequence usuario_sec;
+
+
+Crea la tabla necesaria para el proyecto:
+----------------------------------------
+
+CREATE TABLE usuario
+(
+  id_usuario integer NOT NULL DEFAULT nextval('usuario_sec'::regclass),
+  dni character varying(8) NOT NULL,
+  nombre character varying(100) NOT NULL,
+  apellido character varying(100) NOT NULL,
+  correo character varying(100) NOT NULL,
+  telefono character varying(20) NOT NULL,
+  usuario character varying(20) NOT NULL,
+  clave character varying(50) NOT NULL,
+  fecha date NOT NULL,
+  foto bytea,
+  estado integer DEFAULT 1,
+  CONSTRAINT usuario_pkey PRIMARY KEY (id_usuario)
+);

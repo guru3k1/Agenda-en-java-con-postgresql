@@ -1,7 +1,9 @@
 # Agenda-en-java-con-postgresql
 Agenda en java con DB postgresql
 
-Actualmente terminado hasta la parte 4 inclusive
+Proyecto finalizado y funcional.
+
+Para el armado de la DB se encuentra el archivo con los comandos de postgresql.
 
 Esta agenda es a base de un tutorial de Somos Sistemas.
 Link al curso
