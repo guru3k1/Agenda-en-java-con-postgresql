@@ -95,7 +95,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         String dni = txtdni.getText().trim();
         String nom = txtnombre.getText().trim();
         String ape = txtapellido.getText().trim();
-        boolean estado = validarFormatoCorreo(txtcorreo.getText());
+        boolean estado = validarFormatoCorreo(txtcorreo.getText().trim());
         String te = txttelefono.getText().trim();
         String usu = txtusuario.getText().trim();
         String contra = txtpassword.getText();
@@ -240,6 +240,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         tbldatos = new javax.swing.JTable();
         txtbuscar = new javax.swing.JTextField();
         lblbuscar = new javax.swing.JLabel();
+        btnnuevo = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         lblfoto = new javax.swing.JLabel();
         btnfoto = new javax.swing.JButton();
@@ -260,7 +261,6 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         jdatefecha = new com.toedter.calendar.JDateChooser();
         jLabel11 = new javax.swing.JLabel();
         btnguardar = new javax.swing.JButton();
-        btnnuevo = new javax.swing.JButton();
         btneliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -286,7 +286,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tbldatos);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 69, 750, 360));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 750, 340));
 
         txtbuscar.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
@@ -302,6 +302,15 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
 
         lblbuscar.setText("Buscar");
         jPanel1.add(lblbuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 20, 110, 30));
+
+        btnnuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar.png"))); // NOI18N
+        btnnuevo.setText("Nuevo");
+        btnnuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnnuevoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnnuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 410, 110, 30));
 
         pane.addTab("Lista de Usuarios", jPanel1);
 
@@ -420,15 +429,6 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         });
         jPanel2.add(btnguardar, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 380, 110, 30));
 
-        btnnuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar.png"))); // NOI18N
-        btnnuevo.setText("Nuevo");
-        btnnuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnnuevoActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnnuevo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 380, 110, 30));
-
         btneliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Eliminar.png"))); // NOI18N
         btneliminar.setText("Eliminar");
         btneliminar.setEnabled(false);
@@ -437,7 +437,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
                 btneliminarActionPerformed(evt);
             }
         });
-        jPanel2.add(btneliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 380, 110, -1));
+        jPanel2.add(btneliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 380, 110, -1));
 
         pane.addTab("Usuarios", jPanel2);
 
@@ -451,7 +451,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pane, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(pane, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
@@ -541,6 +541,7 @@ public class IU_GestionUsuarios extends javax.swing.JFrame {
 
     private void btnnuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnnuevoActionPerformed
         limpiarTodo();
+        pane.setSelectedIndex(1);
     }//GEN-LAST:event_btnnuevoActionPerformed
 
     private void btneliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneliminarActionPerformed
